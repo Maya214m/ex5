@@ -1,3 +1,8 @@
+/******************
+Name:Maya Mattar
+ID:213510407
+Assignment:ex5
+*******************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -127,12 +132,14 @@ void addSong(Playlist *playlist) {
     Song **temp = realloc(playlist->songs, (playlist->songsNum + 1) * sizeof(Song *));
     if (!temp) {
         printf("Memory allocation failed!\n");
+        free(playlist->songs);
         exit(1);
     }
     playlist->songs = temp;
     playlist->songs[playlist->songsNum] = malloc(sizeof(Song));
     if (!playlist->songs[playlist->songsNum]) {
         printf("Memory allocation failed!\n");
+        free(playlist->songs);
         exit(1);
     }
     Song *song = playlist->songs[playlist->songsNum];
