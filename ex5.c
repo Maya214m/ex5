@@ -127,7 +127,7 @@ void sort(Song **songs, int songsNum, int criteria) {
 }
 // Function for add song option
 void addSong(Playlist *playlist) {
-    printf("Enter song's details:\n");
+    printf("Enter song's details\n");
     // Dynamically allocate memory for a new song
     Song **temp = realloc(playlist->songs, (playlist->songsNum + 1) * sizeof(Song *));
     if (!temp) {
@@ -175,7 +175,6 @@ void managePlaylist(Playlist *playlist) {
         printf("\t5. Play\n");
         printf("\t6. exit\n");
         scanf("%d", &option);
-        getchar();
 
         if (option == 1) {  // Show Playlist
             if (playlist->songsNum == 0) {
@@ -183,7 +182,7 @@ void managePlaylist(Playlist *playlist) {
             } else {
                 int songIndex = -1;
                 for (int i = 0; i < playlist->songsNum; i++) {
-                    printf("%d. Title: %s\n   Artist: %s\n   Released: %d\n   Streams: %d\n",
+                    printf("%d. Title: %s\nArtist: %s\nReleased: %d\nStreams: %d\n",
                            i + 1,
                            playlist->songs[i]->title,
                            playlist->songs[i]->artist,
@@ -215,7 +214,7 @@ void managePlaylist(Playlist *playlist) {
             } else {
                 // Display all songs for user selection
                 for (int i = 0; i < playlist->songsNum; i++) {
-                    printf("%d. Title: %s\n  Artist: %s\n  Released: %d\n  Streams: %d\n",
+                    printf("%d. Title: %s\nArtist: %s\nReleased: %d\nStreams: %d\n",
                         i + 1,
                         playlist->songs[i]->title,
                         playlist->songs[i]->artist,
@@ -246,7 +245,7 @@ void managePlaylist(Playlist *playlist) {
                 printf("Song deleted successfully.\n");
             }
         } else if (option == 4) {
-            printf("Choose:\n");
+            printf("choose:\n");
             printf("1. sort by year\n");
             printf("2. sort by streams - ascending order\n");
             printf("3. sort by streams - descending order\n");
@@ -333,7 +332,6 @@ void mainMenu() {
             playlists[playlistCount]->songsNum = 0;
 
             printf("Enter playlist's name:\n");
-            getchar();
             playlists[playlistCount]->name = getDynamicString();
             playlistCount++;
         } else if (choice == 3) {
