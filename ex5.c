@@ -152,7 +152,7 @@ void addSong(Playlist *playlist) {
     song->artist = getDynamicString();
     printf("Year of release:\n");
     scanf("%d", &song->year);
-    getchar();
+    while (getchar() != '\n');
     printf("Lyrics:\n");
     song->lyrics = getDynamicString();
     // Initialize streams to 0
@@ -175,7 +175,7 @@ void managePlaylist(Playlist *playlist) {
         printf("\t5. Play\n");
         printf("\t6. exit\n");
         scanf("%d", &option);
-        getchar();
+        while (getchar() != '\n');
 
         if (option == 1) {  // Show Playlist
             if (playlist->songsNum == 0) {
@@ -195,6 +195,7 @@ void managePlaylist(Playlist *playlist) {
                 while (1) {
                     printf("choose a song to play, or 0 to quit:\n");
                     scanf("%d", &songIndex);
+                    getchar();
 
                     if (songIndex == 0) {
                         break;  // Exit back to the managePlaylist menu
@@ -226,7 +227,7 @@ printf("\n");
                 printf("choose a song to delete, or 0 to quit:\n");
                 int songIndex;
                 scanf("%d", &songIndex);
-                getchar();
+                while (getchar() != '\n');
                 // Check if user wants to quit
                 if (songIndex == 0) {
                     return;
@@ -253,7 +254,7 @@ printf("\n");
             printf("4. sort alphabetically\n");
             int sortOption;
             scanf("%d", &sortOption);
-            getchar();
+            while (getchar() != '\n');
             if (sortOption >= 1 && sortOption <= 4) {
                 sort(playlist->songs, playlist->songsNum, sortOption);
                 printf("sorted\n");
@@ -294,14 +295,14 @@ void mainMenu() {
         printf("\t4. exit\n");
 
         scanf("%d", &choice);
-        getchar();
+        while (getchar() != '\n');
 
         if (choice == 1) {
             if (playlistCount == 0) {
                 printf("Choose a playlist:\n");
                 printf("\t1. Back to main menu\n");
                 scanf("%d", &subChoice);
-                getchar();
+                while (getchar() != '\n');
             } else {
                 while (1) {
                     printf("Choose a playlist:\n");
@@ -310,7 +311,7 @@ void mainMenu() {
                     }
                     printf("\t%d. Back to main menu\n", playlistCount + 1);
                     scanf("\t%d", &subChoice);
-                    getchar();
+                    while (getchar() != '\n');
                     if (subChoice == playlistCount + 1) {
                         break;
                     } else if (subChoice > 0 && subChoice <= playlistCount) {
@@ -346,7 +347,7 @@ void mainMenu() {
                 // Prompt user to select a playlist to delete
                 int playlistIndex;
                 scanf("%d", &playlistIndex);
-                getchar();
+                while (getchar() != '\n');
                 // Handle "Back to main menu" selection
                 if (playlistIndex == playlistCount + 1) {
                     break; // Return to the main menu
