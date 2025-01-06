@@ -332,7 +332,7 @@ void mainMenu() {
             playlistCount++;
         } else if (choice == 3) {
                 if (playlistCount == 0) {
-                    printf("No playlists available.\n");
+                    return;
                 } else {
                     // Display playlists with the "Back to main menu" option
                     for (int i = 0; i < playlistCount; i++) {
@@ -382,6 +382,8 @@ void mainMenu() {
                 free(playlists);
                 printf("Goodbye!\n");
                 exit(0);
+            } else {
+                printf("Invalid option.\n");
             }
         }
     }
