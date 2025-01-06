@@ -13,7 +13,6 @@ char* getDynamicString() {
     int len = 0;
     char ch;
     // Clears the input buffer before starting
-    while ((ch = getchar()) != '\n' && ch != EOF);
 
     while ((ch = getchar()) != '\n' && ch != EOF) {
       char *temp = realloc(str, len + 2); // Allocate space for the new character and null terminator
@@ -153,6 +152,7 @@ void addSong(Playlist *playlist) {
     song->artist = getDynamicString();
     printf("Year of release:\n");
     scanf("%d", &song->year);
+    getchar();
     printf("Lyrics:\n");
     song->lyrics = getDynamicString();
     // Initialize streams to 0
