@@ -12,6 +12,8 @@ char* getDynamicString() {
     char *str = NULL;
     int len = 0;
     char ch;
+    // Clears the input buffer before starting
+    while ((ch = getchar()) != '\n' && ch != EOF);
 
     while ((ch = getchar()) != '\n' && ch != EOF) {
       char *temp = realloc(str, len + 2); // Allocate space for the new character and null terminator
@@ -146,13 +148,11 @@ void addSong(Playlist *playlist) {
     playlist->songsNum++;
     // Input song details dynamically
     printf("Title:\n");
-    getchar();
     song->title = getDynamicString();
     printf("Artist:\n");
     song->artist = getDynamicString();
     printf("Year of release:\n");
     scanf("%d", &song->year);
-    getchar(); // Clear leftover newline from buffer
     printf("Lyrics:\n");
     song->lyrics = getDynamicString();
     // Initialize streams to 0
@@ -175,6 +175,7 @@ void managePlaylist(Playlist *playlist) {
         printf("\t5. Play\n");
         printf("\t6. exit\n");
         scanf("%d", &option);
+        getchar();
 
         if (option == 1) {  // Show Playlist
             if (playlist->songsNum == 0) {
@@ -220,179 +221,3 @@ void managePlaylist(Playlist *playlist) {
                         playlist->songs[i]->artist,
                         playlist->songs[i]->year,
                         playlist->songs[i]->streams);
-                    printf("\n");
-                }
-                printf("choose a song to delete, or 0 to quit:\n");
-                int songIndex;
-                scanf("%d", &songIndex);
-                getchar();
-                // Check if user wants to quit
-                if (songIndex == 0) {
-                    return;
-                }
-                // Free memory for the selected song
-                freeSong(playlist->songs[songIndex - 1]);
-                // Shift remaining songs in the array
-                for (int i = songIndex - 1; i < playlist->songsNum - 1; i++) {
-                    playlist->songs[i] = playlist->songs[i + 1];
-                }
-                playlist->songsNum--; // Decrement song count
-                playlist->songs = realloc(playlist->songs, playlist->songsNum * sizeof(Song *));
-                if (playlist->songsNum > 0 && !playlist->songs) {
-                    printf("Memory allocation error.\n");
-                    exit(1);
-                }
-                printf("Song deleted successfully.\n");
-            }
-        } else if (option == 4) {
-            printf("choose:\n");
-            printf("1. sort by year\n");
-            printf("2. sort by streams - ascending order\n");
-            printf("3. sort by streams - descending order\n");
-            printf("4. sort alphabetically\n");
-            int sortOption;
-            scanf("%d", &sortOption);
-            getchar();
-            if (sortOption >= 1 && sortOption <= 4) {
-                sort(playlist->songs, playlist->songsNum, sortOption);
-                printf("sorted\n");
-            } else {
-                sort(playlist->songs, playlist->songsNum, 4);
-                printf("sorted\n");
-            }
-            continue;
-        } else if (option == 5) {
-            if (playlist->songsNum == 0) {
-                printf("The playlist is empty.\n");
-            } else {
-                // Play each song in the playlist in order
-                for (int i = 0; i < playlist->songsNum; i++) {
-                    printf("Now playing %s:\n", playlist->songs[i]->title);
-                    printf("$ %s $\n", playlist->songs[i]->lyrics);
-                    playlist->songs[i]->streams++;
-                    printf("\n");
-                }
-            }
-        } else if (option == 6) {
-            return; // Back to choose a playlist menu
-        }
-        else {
-            break;
-        }
-    }
-}
-// Main menu
-void mainMenu() {
-    int choice = 0;
-    int subChoice;
-    while (1) {
-        printf("Please Choose:\n");
-        printf("\t1. Watch playlists\n");
-        printf("\t2. Add playlist\n");
-        printf("\t3. Remove playlist\n");
-        printf("\t4. exit\n");
-
-        scanf("%d", &choice);
-        getchar();
-
-        if (choice == 1) {
-            if (playlistCount == 0) {
-                printf("Choose a playlist:\n");
-                printf("\t1. Back to main menu\n");
-                scanf("%d", &subChoice);
-            } else {
-                while (1) {
-                    printf("Choose a playlist:\n");
-                    for (int i = 0; i < playlistCount; i++) {
-                        printf("\t%d. %s\n", i + 1, playlists[i]->name);
-                    }
-                    printf("\t%d. Back to main menu\n", playlistCount + 1);
-                    scanf("\t%d", &subChoice);
-                    if (subChoice == playlistCount + 1) {
-                        break;
-                    } else if (subChoice > 0 && subChoice <= playlistCount) {
-                        managePlaylist(playlists[subChoice - 1]);
-                    } else {
-                        printf("Invalid choice. Try again.\n");
-                    }
-                }
-            }
-        } else if (choice == 2) {
-            playlists = realloc(playlists, (playlistCount + 1) * sizeof(Playlist *));
-            if (!playlists) {
-                printf("Memory allocation error.\n");
-                exit(1);
-            }
-            playlists[playlistCount] = malloc(sizeof(Playlist));
-            if (!playlists[playlistCount]) {
-                printf("Memory allocation error.\n");
-                exit(1);
-            }
-            playlists[playlistCount]->songs = NULL;
-            playlists[playlistCount]->songsNum = 0;
-
-            printf("Enter playlist's name:\n");
-            playlists[playlistCount]->name = getDynamicString();
-            playlistCount++;
-        } else if (choice == 3) {
-            while (1) {
-                printf("Choose a playlist:\n");
-                // Display playlists with the "Back to main menu" option
-                for (int i = 0; i < playlistCount; i++) {
-                    printf("\t%d. %s\n", i + 1, playlists[i]->name);
-                }
-                printf("\t%d. Back to main menu\n", playlistCount + 1);
-                // Prompt user to select a playlist to delete
-                int playlistIndex;
-                scanf("%d", &playlistIndex);
-                getchar();
-                // Handle "Back to main menu" selection
-                if (playlistIndex == playlistCount + 1) {
-                    break; // Return to the main menu
-                } else if (playlistIndex > 0 && playlistIndex <= playlistCount) {
-                    // Delete the selected playlist
-                    for (int i = 0; i < playlists[playlistIndex - 1]->songsNum; i++) {
-                        freeSong(playlists[playlistIndex - 1]->songs[i]); // Free all songs
-                    }
-                    free(playlists[playlistIndex - 1]->songs);  // Free the playlist's song array
-                    free(playlists[playlistIndex - 1]->name);   // Free the playlist name
-                    free(playlists[playlistIndex - 1]);         // Free the playlist structure
-                    // Shift remaining playlists in the array
-                    for (int i = playlistIndex - 1; i < playlistCount - 1; i++) {
-                        playlists[i] = playlists[i + 1];
-                    }
-                    playlistCount--; // Decrement playlist count
-                    playlists = realloc(playlists, playlistCount * sizeof(Playlist *));
-                    if (playlistCount > 0 && !playlists) {
-                        printf("Memory allocation failed during resize!\n");
-                        exit(1);
-                    }
-                    printf("Playlist deleted.\n");
-                    break;
-                }
-            }
-        } else if (choice == 4) {
-            for (int i = 0; i < playlistCount; i++) {
-                free(playlists[i]->name);
-                for (int j = 0; j < playlists[i]->songsNum; j++) {
-                    free(playlists[i]->songs[j]->title);
-                    free(playlists[i]->songs[j]->artist);
-                    free(playlists[i]->songs[j]->lyrics);
-                    free(playlists[i]->songs[j]);
-                }
-                free(playlists[i]->songs);
-                free(playlists[i]);
-            }
-            free(playlists);
-            printf("Goodbye!\n");
-            exit(0);
-        } else {
-            break;
-        }
-    }
-}
-// Main function
-int main() {
-    mainMenu();
-    return 0;
-}
