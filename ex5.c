@@ -175,6 +175,7 @@ void managePlaylist(Playlist *playlist) {
         printf("\t5. Play\n");
         printf("\t6. exit\n");
         scanf("%d", &option);
+        getchar();
 
         if (option == 1) {  // Show Playlist
             if (playlist->songsNum == 0) {
@@ -225,6 +226,7 @@ void managePlaylist(Playlist *playlist) {
                 printf("choose a song to delete, or 0 to quit:\n");
                 int songIndex;
                 scanf("%d", &songIndex);
+                getchar();
                 // Check if user wants to quit
                 if (songIndex == 0) {
                     return;
@@ -251,6 +253,7 @@ void managePlaylist(Playlist *playlist) {
             printf("4. sort alphabetically\n");
             int sortOption;
             scanf("%d", &sortOption);
+            getchar();
             if (sortOption >= 1 && sortOption <= 4) {
                 sort(playlist->songs, playlist->songsNum, sortOption);
                 printf("sorted\n");
@@ -281,6 +284,7 @@ void managePlaylist(Playlist *playlist) {
 // Main menu
 void mainMenu() {
     int choice = 0;
+    int subChoice;
     while (1) {
         printf("Please Choose:\n");
         printf("\t1. Watch playlists\n");
@@ -289,11 +293,13 @@ void mainMenu() {
         printf("\t4. exit\n");
 
         scanf("%d", &choice);
+        getchar();
 
         if (choice == 1) {
             if (playlistCount == 0) {
                 printf("Choose a playlist:\n");
                 printf("\t1. Back to main menu\n");
+                scanf("%d", &subChoice);
             } else {
                 while (1) {
                     printf("Choose a playlist:\n");
@@ -301,8 +307,7 @@ void mainMenu() {
                         printf("\t%d. %s\n", i + 1, playlists[i]->name);
                     }
                     printf("\t%d. Back to main menu\n", playlistCount + 1);
-                    int subChoice;
-                    scanf("%d", &subChoice);
+                    scanf("\t%d", &subChoice);
                     if (subChoice == playlistCount + 1) {
                         break;
                     } else if (subChoice > 0 && subChoice <= playlistCount) {
@@ -326,46 +331,46 @@ void mainMenu() {
             playlists[playlistCount]->songs = NULL;
             playlists[playlistCount]->songsNum = 0;
 
-            printf("Enter playlist's name: \n");
-            getchar(); // Clear the newline left by scanf
+            printf("Enter playlist's name:\n");
+            getchar();
             playlists[playlistCount]->name = getDynamicString();
             playlistCount++;
         } else if (choice == 3) {
-                if (playlistCount == 0) {
-                    return;
-                } else {
+            while (1) {
+                printf("Choose a playlist:\n");
                     // Display playlists with the "Back to main menu" option
                     for (int i = 0; i < playlistCount; i++) {
-                        printf("%d. %s\n", i + 1, playlists[i]->name);
+                        printf("\t%d. %s\n", i + 1, playlists[i]->name);
                     }
-                    printf("%d. Back to main menu\n", playlistCount + 1);
-                    // Prompt user to select a playlist to delete
-                    printf("Choose a playlist: ");
-                    int playlistIndex;
-                    scanf("%d", &playlistIndex);
-                    // Handle "Back to main menu" selection
-                    if (playlistIndex == playlistCount + 1) {
-                        return; // Return to the main menu
+                printf("\t%d. Back to main menu\n", playlistCount + 1);
+                // Prompt user to select a playlist to delete
+                int playlistIndex;
+                scanf("%d", &playlistIndex);
+                getchar();
+                // Handle "Back to main menu" selection
+                if (playlistIndex == playlistCount + 1) {
+                    break; // Return to the main menu
+                    } else if (playlistIndex > 0 && playlistIndex <= playlistCount) {
+                        // Delete the selected playlist
+                        for (int i = 0; i < playlists[playlistIndex - 1]->songsNum; i++) {
+                            freeSong(playlists[playlistIndex - 1]->songs[i]); // Free all songs
+                        }
+                        free(playlists[playlistIndex - 1]->songs);  // Free the playlist's song array
+                        free(playlists[playlistIndex - 1]->name);   // Free the playlist name
+                        free(playlists[playlistIndex - 1]);         // Free the playlist structure
+                        // Shift remaining playlists in the array
+                        for (int i = playlistIndex - 1; i < playlistCount - 1; i++) {
+                            playlists[i] = playlists[i + 1];
+                        }
+                        playlistCount--; // Decrement playlist count
+                        playlists = realloc(playlists, playlistCount * sizeof(Playlist *));
+                        if (playlistCount > 0 && !playlists) {
+                            printf("Memory allocation failed during resize!\n");
+                            exit(1);
+                        }
+                        printf("Playlist deleted.\n");
+                        break;
                     }
-                    // Delete the selected playlist
-                    for (int i = 0; i < playlists[playlistIndex - 1]->songsNum; i++) {
-                        freeSong(playlists[playlistIndex - 1]->songs[i]); // Free all songs
-                    }
-                    free(playlists[playlistIndex - 1]->songs);  // Free the playlist's song array
-                    free(playlists[playlistIndex - 1]->name);   // Free the playlist name
-                    free(playlists[playlistIndex - 1]);         // Free the playlist structure
-                    // Shift remaining playlists in the array
-                    for (int i = playlistIndex - 1; i < playlistCount - 1; i++) {
-                        playlists[i] = playlists[i + 1];
-                    }
-                    playlistCount--; // Decrement playlist count
-                    playlists = realloc(playlists, playlistCount * sizeof(Playlist *));
-                    if (playlistCount > 0 && !playlists) {
-                        printf("Memory allocation failed during resize!\n");
-                        exit(1);
-                    }
-
-                    printf("Playlist deleted.\n");
                 }
             } else if (choice == 4) {
                 for (int i = 0; i < playlistCount; i++) {
@@ -382,8 +387,6 @@ void mainMenu() {
                 free(playlists);
                 printf("Goodbye!\n");
                 exit(0);
-            } else {
-                printf("Invalid option.\n");
             }
         }
     }
