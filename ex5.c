@@ -166,13 +166,16 @@ void addSong(Playlist *playlist) {
     // Input song details dynamically
     printf("Title:\n");
     song->title = getDynamicString();
+    trimString(song->title);
     printf("Artist:\n");
     song->artist = getDynamicString();
+    trimString(song->artist);
     printf("Year of release:\n");
     scanf("%d", &song->year);
     while (getchar() != '\n');
     printf("Lyrics:\n");
     song->lyrics = getDynamicString();
+    trimString(song->lyrics);
     // Initialize streams to 0
     song->streams = 0;
 }
@@ -251,7 +254,7 @@ void managePlaylist(Playlist *playlist) {
                         playlist->songs[i]->artist,
                         playlist->songs[i]->year,
                         playlist->songs[i]->streams);
-printf("\n");
+                    printf("\n");
                 }
                 printf("choose a song to delete, or 0 to quit:\n");
                 int songIndex;
@@ -300,7 +303,12 @@ printf("\n");
             } else {
                 // Play each song in the playlist in order
                 for (int i = 0; i < playlist->songsNum; i++) {
-                    printf("Now playing %s:\n", playlist->songs[i]->title);
+                    // Create a temorary buffer for the song title
+                    int length = strlen(playlist->songs[i]->title);
+                    char temp[length + 1];
+                    strcpy(temp, playlist->songs[i]->title);
+                    trimString(temp);
+                    printf("Now playing %s:\n", temp);
                     printf("$ %s $\n", playlist->songs[i]->lyrics);
                     playlist->songs[i]->streams++;
                     printf("\n");
@@ -367,6 +375,7 @@ void mainMenu() {
 
             printf("Enter playlist's name:\n");
             playlists[playlistCount]->name = getDynamicString();
+            trimString(playlists[playlistCount]->name);
             playlistCount++;
         } else if (choice == 3) {
             while (1) {
