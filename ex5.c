@@ -164,14 +164,9 @@ void managePlaylist(Playlist *playlist) {
     int firstTime = 1; // Flag to track first-time display
     while (1) {
         if (firstTime) {
-           int length = strlen(playlist->name);
-            char temp[length + 1];
-            strcpy(temp, playlist->name);
-            if (temp[length - 1] == ':' || temp[length - 1] == ' ') {
-                temp[length - 1] = '0';
-            }
-          printf("playlist %s:\n", temp);
-          firstTime = 0; // Reset flag after the first display
+            printf("playlist %s:\n", playlist->name);
+            firstTime = 0; // Reset flag after the first display
+        }
         // Print menu options
         printf("\t1. Show Playlist\n");
         printf("\t2. Add Song\n");
@@ -180,8 +175,7 @@ void managePlaylist(Playlist *playlist) {
         printf("\t5. Play\n");
         printf("\t6. exit\n");
         scanf("%d", &option);
-        int ch;
-        while ((ch = getchar()) != '\n' && ch !=EOF);
+        while (getchar() != '\n');
 
         if (option == 1) {  // Show Playlist
             if (playlist->songsNum == 0) {
@@ -206,14 +200,8 @@ void managePlaylist(Playlist *playlist) {
                     if (songIndex == 0) {
                         break;  // Exit back to the managePlaylist menu
                     } else if (songIndex > 0 && songIndex <= playlist->songsNum) {
-                        // Play the chosen song and increment its streams, clean up the song title
-                        int length = strlen(playlist->songs[songIndex - 1]->title);
-                        char temp[length + 1];
-                        strcpy(temp, playlist->songs[songIndex - 1]->title);
-                        if (temp[length - 1] == ':' || temp[length - 1] == ' ') {
-                            temp[length - 1] = '0'
-                                }
-                        printf("Now playing %s:\n", temp);
+                        // Play the chosen song and increment its streams
+                        printf("Now playing %s:\n", playlist->songs[songIndex - 1]->title);
                         printf("$ %s $\n", playlist->songs[songIndex - 1]->lyrics);
                         playlist->songs[songIndex - 1]->streams++;  // Increment the stream count
                     }
@@ -281,14 +269,7 @@ printf("\n");
             } else {
                 // Play each song in the playlist in order
                 for (int i = 0; i < playlist->songsNum; i++) {
-                    // Use a temporary buffer to clean up the song title
-                    int length = strlen(playlist->songs[i]->title);
-                    char temp[length + 1];
-                    strcpy(temp, playlist->songs[i]->title);
-                    if (temp[length - 1] == ':' || temp[length - 1] == ' ') {
-                        temp[length - 1] = '0';
-                    }
-                    printf("Now playing %s:\n", temp);
+                    printf("Now playing %s:\n", playlist->songs[i]->title);
                     printf("$ %s $\n", playlist->songs[i]->lyrics);
                     playlist->songs[i]->streams++;
                     printf("\n");
