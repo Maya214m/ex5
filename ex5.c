@@ -57,6 +57,7 @@ int playlistCount = 0;
 
 // Function prototypes
 char* getDynamicString();
+void trimString(char *str);
 void addSong(Playlist *playlist);
 void deleteSong(Song *song);
 void playSong(Song *song);
@@ -68,6 +69,14 @@ void managePlaylist(Playlist *playlist);
 void mainMenu();
 
 // Function implementations
+void trimString(char *str) {
+    int length = strlen(str);
+    // Trim trailing spaces or newlines
+    while (length > 0 && str[length - 1] == ' ' || str[length - 1] == '\n') {
+        str[length - 1] = '\0';
+        length--;
+    }
+}
 void deleteSong(Song *song) {
     if (song) {
         free(song->title);
@@ -176,12 +185,8 @@ void managePlaylist(Playlist *playlist) {
             int length = strlen(playlist->name);
             char tmp[length + 1];
             strcpy(tmp, playlist->name);
-
-            // Ensure there is no trailing space after ':'
-            if (tmp[length - 1] == ' ') {
-                tmp[length - 1] = '\0';
-            }
-
+            // Clean up trailing spaces or newline
+            trimString(tmp);
             printf("playlist %s:\n", tmp);
             firstTime = 0; // Reset flag after the first display
         }
@@ -223,10 +228,8 @@ void managePlaylist(Playlist *playlist) {
                         int length = strlen(playlist->songs[songIndex - 1]->title);
                         char tmp[length + 1];
                         strcpy(tmp, playlist->songs[songIndex - 1]->title);
-                        // Check and remove trailing spaces
-                        if (tmp[length - 1] == ' ') {
-                            tmp[length - 1] = '\0';
-                        }
+                        // Clean up trailing spaces or newlines
+                        trimString(tmp);
                         printf("Now playing %s:\n", tmp);
                         printf("$ %s $\n", playlist->songs[songIndex - 1]->lyrics);
                         playlist->songs[songIndex - 1]->streams++;  // Increment the stream count
