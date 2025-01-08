@@ -164,7 +164,20 @@ void managePlaylist(Playlist *playlist) {
     int firstTime = 1; // Flag to track first-time display
     while (1) {
         if (firstTime) {
-            printf("playlist %s:\n", playlist->name);
+            // Pointer to the playlist name
+            int length = strlen(playlist->name);
+
+            // Create a temporary buffer to clean the playlist name
+            char tmp[length + 1];
+            strcpy(tmp, playlist->name);
+
+            // Remove trailing spaces (but not the colon)
+            if (tmp[length - 1] == ' ') {
+                tmp[length - 1] = '\0';
+            }
+
+            // Print the cleaned-up playlist name
+            printf("playlist %s:\n",tmp);
             firstTime = 0; // Reset flag after the first display
         }
         // Print menu options
@@ -196,14 +209,24 @@ void managePlaylist(Playlist *playlist) {
                     printf("choose a song to play, or 0 to quit:\n");
                     scanf("%d", &songIndex);
                     getchar();
-
                     if (songIndex == 0) {
-                        break;  // Exit back to the managePlaylist menu
+                        break;
                     } else if (songIndex > 0 && songIndex <= playlist->songsNum) {
-                        // Play the chosen song and increment its streams
-                        printf("Now playing %s:\n", playlist->songs[songIndex - 1]->title);
-                        printf("$ %s $\n", playlist->songs[songIndex - 1]->lyrics);
-                        playlist->songs[songIndex - 1]->streams++;  // Increment the stream count
+                        // Pointer to the selected song
+                        Song *song = playlist->songs[songIndex - 1];
+                        int length = strlen(song->title);
+                        // Create a temporary buffer to clean up the title
+                        char tmp[length + 1];
+                        strcpy(tmp, song->title);
+                        // Remove trailing spaces (but not the colon)
+                        if (tmp[length - 1] == ' ') {
+                            tmp[length - 1] = '\0';
+                        }
+                        // Print the cleaned-up title with the song index
+                        printf("Now playing %s:\n", tmp);
+                        printf("$ %s $\n", song->lyrics);
+                        // Increment the stream count
+                        song->streams++;
                     }
                 }
             }
@@ -222,7 +245,7 @@ void managePlaylist(Playlist *playlist) {
                         playlist->songs[i]->artist,
                         playlist->songs[i]->year,
                         playlist->songs[i]->streams);
-printf("\n");
+                    printf("\n");
                 }
                 printf("choose a song to delete, or 0 to quit:\n");
                 int songIndex;
@@ -267,12 +290,25 @@ printf("\n");
             if (playlist->songsNum == 0) {
                 printf("The playlist is empty.\n");
             } else {
-                // Play each song in the playlist in order
                 for (int i = 0; i < playlist->songsNum; i++) {
-                    printf("Now playing %s:\n", playlist->songs[i]->title);
-                    printf("$ %s $\n", playlist->songs[i]->lyrics);
-                    playlist->songs[i]->streams++;
-                    printf("\n");
+                    // Pointer to the song in index i
+                    Song *song = playlist->songs[i];
+                    int length = strlen(song->title);
+
+                    // Create a temporary buffer to clean the title
+                    char tmp[length + 1];
+                    strcpy(tmp, song->title);
+
+                    // Remove trailing spaces (but not the colon)
+                    if (tmp[length - 1] == ' ') {
+                        tmp[length - 1] = '\0';
+                    }
+                    // Print the cleaned-up title
+                    printf("Now playing %s:\n", tmp);
+                    printf("$ %s $\n", song->lyrics);
+
+                    // Increment the stream count
+                    song->streams++;
                 }
             }
         } else if (option == 6) {
@@ -396,5 +432,5 @@ void mainMenu() {
 // Main function
 int main() {
     mainMenu();
-    return 0;
+    return 0;
 }
