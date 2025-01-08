@@ -11,28 +11,19 @@ Assignment:ex5
 char* getDynamicString() {
     char *str = NULL;
     int len = 0;
-    int capacity = 1;
     char ch;
-    str = malloc(capacity);
-    if (!str) {
-        printf("Memory allocation error\n");
-        exit(1);
-    }
-    // Read characters until newline or EOF
+    // Clears the input buffer before starting
+
     while ((ch = getchar()) != '\n' && ch != EOF) {
-        // Resize if necessary
-        if (len + 1 >= capacity) {
-            capacity *= 2;
-            char *temp = realloc(str, capacity);
-            if (!temp) {
-                free(str); // Memory allocation failed
-                exit(1);
-            }
-            str = temp;
+      char *temp = realloc(str, len + 2); // Allocate space for the new character and null terminator
+        if (!temp) {
+            free(str); // Memory allocation failed
+            exit(1);
         }
+        str = temp;
         str[len++] = ch;
-    }
         str[len] = '\0'; // Null-terminate the string
+    }
     return str;
 }
 // Song struct
@@ -57,7 +48,6 @@ int playlistCount = 0;
 
 // Function prototypes
 char* getDynamicString();
-void trimString(char *str);
 void addSong(Playlist *playlist);
 void deleteSong(Song *song);
 void playSong(Song *song);
@@ -69,14 +59,6 @@ void managePlaylist(Playlist *playlist);
 void mainMenu();
 
 // Function implementations
-void trimString(char *str) {
-    int length = strlen(str);
-    // Trim trailing spaces or newlines
-    while (length > 0 && (str[length - 1] == ' ' || str[length - 1] == '\n')) {
-        str[length - 1] = '\0';
-        length--;
-    }
-}
 void deleteSong(Song *song) {
     if (song) {
         free(song->title);
@@ -166,16 +148,13 @@ void addSong(Playlist *playlist) {
     // Input song details dynamically
     printf("Title:\n");
     song->title = getDynamicString();
-    trimString(song->title);
     printf("Artist:\n");
     song->artist = getDynamicString();
-    trimString(song->artist);
     printf("Year of release:\n");
     scanf("%d", &song->year);
     while (getchar() != '\n');
     printf("Lyrics:\n");
     song->lyrics = getDynamicString();
-    trimString(song->lyrics);
     // Initialize streams to 0
     song->streams = 0;
 }
@@ -185,14 +164,14 @@ void managePlaylist(Playlist *playlist) {
     int firstTime = 1; // Flag to track first-time display
     while (1) {
         if (firstTime) {
-            int length = strlen(playlist->name);
-            char tmp[length + 1];
-            strcpy(tmp, playlist->name);
-            // Clean up trailing spaces or newline
-            trimString(tmp);
-            printf("playlist %s:\n", tmp);
-            firstTime = 0; // Reset flag after the first display
-        }
+           int length = strlen(playlist->name);
+            char temp[length + 1];
+            strcpy(temp, playlist->name);
+            if (temp[length - 1] == ':' || temp[length - 1] == ' ') {
+                temp[length - 1] = '0';
+            }
+          printf("playlist %s:\n", temp);
+          firstTime = 0 // Reset flag after the first display
         // Print menu options
         printf("\t1. Show Playlist\n");
         printf("\t2. Add Song\n");
@@ -202,7 +181,7 @@ void managePlaylist(Playlist *playlist) {
         printf("\t6. exit\n");
         scanf("%d", &option);
         int ch;
-        while ((ch =getchar()) != '\n' && ch != EOF);
+        while ((ch = getchar()) != '\n' && ch !=EOF);
 
         if (option == 1) {  // Show Playlist
             if (playlist->songsNum == 0) {
@@ -227,13 +206,14 @@ void managePlaylist(Playlist *playlist) {
                     if (songIndex == 0) {
                         break;  // Exit back to the managePlaylist menu
                     } else if (songIndex > 0 && songIndex <= playlist->songsNum) {
-                        // Play the chosen song and increment its streams
+                        // Play the chosen song and increment its streams, clean up the song title
                         int length = strlen(playlist->songs[songIndex - 1]->title);
-                        char tmp[length + 1];
-                        strcpy(tmp, playlist->songs[songIndex - 1]->title);
-                        // Clean up trailing spaces or newlines
-                        trimString(tmp);
-                        printf("Now playing %s:\n", tmp);
+                        char temp[length + 1];
+                        strcpy(temp, playlist->songs[songIndex - 1]->title);
+                        if (temp[length - 1] == ':' || temp[length - 1] == ' ') {
+                            temp[length - 1] = '0'
+                                }
+                        printf("Now playing %s:\n", temp);
                         printf("$ %s $\n", playlist->songs[songIndex - 1]->lyrics);
                         playlist->songs[songIndex - 1]->streams++;  // Increment the stream count
                     }
@@ -254,14 +234,12 @@ void managePlaylist(Playlist *playlist) {
                         playlist->songs[i]->artist,
                         playlist->songs[i]->year,
                         playlist->songs[i]->streams);
-                    printf("\n");
+printf("\n");
                 }
                 printf("choose a song to delete, or 0 to quit:\n");
                 int songIndex;
                 scanf("%d", &songIndex);
-                int ch;
-                while ((ch =getchar()) != '\n' && ch != EOF);
-
+                while (getchar() != '\n');
                 // Check if user wants to quit
                 if (songIndex == 0) {
                     return;
@@ -303,11 +281,13 @@ void managePlaylist(Playlist *playlist) {
             } else {
                 // Play each song in the playlist in order
                 for (int i = 0; i < playlist->songsNum; i++) {
-                    // Create a temorary buffer for the song title
+                    // Use a temporary buffer to clean up the song title
                     int length = strlen(playlist->songs[i]->title);
                     char temp[length + 1];
                     strcpy(temp, playlist->songs[i]->title);
-                    trimString(temp);
+                    if (temp[length - 1] == ':' || temp[length - 1] == ' ') {
+                        temp[length - 1] = '0';
+                    }
                     printf("Now playing %s:\n", temp);
                     printf("$ %s $\n", playlist->songs[i]->lyrics);
                     playlist->songs[i]->streams++;
@@ -334,8 +314,7 @@ void mainMenu() {
         printf("\t4. exit\n");
 
         scanf("%d", &choice);
-        int ch;
-        while ((ch =getchar()) != '\n' && ch != EOF);
+        while (getchar() != '\n');
 
         if (choice == 1) {
             if (playlistCount == 0) {
@@ -375,7 +354,6 @@ void mainMenu() {
 
             printf("Enter playlist's name:\n");
             playlists[playlistCount]->name = getDynamicString();
-            trimString(playlists[playlistCount]->name);
             playlistCount++;
         } else if (choice == 3) {
             while (1) {
@@ -437,5 +415,5 @@ void mainMenu() {
 // Main function
 int main() {
     mainMenu();
-    return 0;
+    return 0;
 }
