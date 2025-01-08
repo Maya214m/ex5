@@ -173,7 +173,16 @@ void managePlaylist(Playlist *playlist) {
     int firstTime = 1; // Flag to track first-time display
     while (1) {
         if (firstTime) {
-            printf("playlist %s:\n", playlist->name);
+            int length = strlen(playlist->name);
+            char tmp[length + 1];
+            strcpy(tmp, playlist->name);
+
+            // Ensure there is no trailing space after ':'
+            if (tmp[length - 1] == ' ') {
+                tmp[length - 1] = '\0';
+            }
+
+            printf("playlist %s:\n", tmp);
             firstTime = 0; // Reset flag after the first display
         }
         // Print menu options
@@ -211,7 +220,14 @@ void managePlaylist(Playlist *playlist) {
                         break;  // Exit back to the managePlaylist menu
                     } else if (songIndex > 0 && songIndex <= playlist->songsNum) {
                         // Play the chosen song and increment its streams
-                        printf("Now playing %s:\n", playlist->songs[songIndex - 1]->title);
+                        int length = strlen(playlist->songs[songIndex - 1]->title);
+                        char tmp[length + 1];
+                        strcpy(tmp, playlist->songs[songIndex - 1]->title);
+                        // Check and remove trailing spaces
+                        if (tmp[length - 1] == ' ') {
+                            tmp[length - 1] = '\0';
+                        }
+                        printf("Now playing %s:\n", tmp);
                         printf("$ %s $\n", playlist->songs[songIndex - 1]->lyrics);
                         playlist->songs[songIndex - 1]->streams++;  // Increment the stream count
                     }
