@@ -72,7 +72,7 @@ void mainMenu();
 void trimString(char *str) {
     int length = strlen(str);
     // Trim trailing spaces or newlines
-    while (length > 0 && str[length - 1] == ' ' || str[length - 1] == '\n') {
+    while (length > 0 && (str[length - 1] == ' ' || str[length - 1] == '\n')) {
         str[length - 1] = '\0';
         length--;
     }
