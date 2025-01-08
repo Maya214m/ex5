@@ -171,7 +171,7 @@ void managePlaylist(Playlist *playlist) {
                 temp[length - 1] = '0';
             }
           printf("playlist %s:\n", temp);
-          firstTime = 0 // Reset flag after the first display
+          firstTime = 0; // Reset flag after the first display
         // Print menu options
         printf("\t1. Show Playlist\n");
         printf("\t2. Add Song\n");
