@@ -169,12 +169,7 @@ void managePlaylist(Playlist *playlist) {
             // Create a temporary buffer to clean the playlist name
             char tmp[length + 1];
             strcpy(tmp, playlist->name);
-            // Remove trailing spaces
-            int j = length - 1;
-            while (j >= 0 && tmp[j] == ' ') {
-                tmp[j] = '\0';
-                j--;
-            }
+            tmp[length - 1] = '\0';
             // Print the cleaned-up playlist name
             printf("playlist %s:\n",tmp);
             firstTime = 0; // Reset flag after the first display
@@ -217,12 +212,7 @@ void managePlaylist(Playlist *playlist) {
                         // Create a temporary buffer to clean up the title
                         char tmp[length + 1];
                         strcpy(tmp, song->title);
-                        // Remove trailing spaces
-                        int i = length - 1;
-                        while (i >= 0 && tmp[i] == ' ') {
-                            tmp[i] = '\0';
-                            i--;
-                        }
+                        tmp[length - 1] = '\0';
                         // Print the cleaned-up title with the song index
                         printf("Now playing %s:\n", tmp);
                         printf("$ %s $\n", song->lyrics);
@@ -298,12 +288,7 @@ void managePlaylist(Playlist *playlist) {
                     // Create a temporary buffer to clean the title
                     char tmp[length + 1];
                     strcpy(tmp, song->title);
-                    // Remove trailing spaces
-                    int i = length - 1;
-                    while (i >= 0 && tmp[i] == ' ') {
-                        tmp[i] = '\0';
-                        i--;
-                    }
+                    tmp[length - 1] = '\0';
                     // Print the cleaned-up title
                     printf("Now playing %s:\n", tmp);
                     printf("$ %s $\n", song->lyrics);
