@@ -11,19 +11,28 @@ Assignment:ex5
 char* getDynamicString() {
     char *str = NULL;
     int len = 0;
+    int capacity = 1;
     char ch;
-    // Clears the input buffer before starting
-
-    while ((ch = getchar()) != '\n' && ch != EOF) {
-      char *temp = realloc(str, len + 2); // Allocate space for the new character and null terminator
-        if (!temp) {
-            free(str); // Memory allocation failed
-            exit(1);
-        }
-        str = temp;
-        str[len++] = ch;
-        str[len] = '\0'; // Null-terminate the string
+    str = malloc(capacity);
+    if (!str) {
+        printf("Memory allocation error\n");
+        exit(1);
     }
+    // Read characters until newline or EOF
+    while ((ch = getchar()) != '\n' && ch != EOF) {
+        // Resize if necessary
+        if (len + 1 >= capacity) {
+            capacity *= 2;
+            char *temp = realloc(str, capacity);
+            if (!temp) {
+                free(str); // Memory allocation failed
+                exit(1);
+            }
+            str = temp;
+        }
+        str[len++] = ch;
+    }
+        str[len] = '\0'; // Null-terminate the string
     return str;
 }
 // Song struct
@@ -175,7 +184,8 @@ void managePlaylist(Playlist *playlist) {
         printf("\t5. Play\n");
         printf("\t6. exit\n");
         scanf("%d", &option);
-        while (getchar() != '\n');
+        int ch;
+        while ((ch =getchar()) != '\n' && ch != EOF);
 
         if (option == 1) {  // Show Playlist
             if (playlist->songsNum == 0) {
@@ -227,7 +237,9 @@ printf("\n");
                 printf("choose a song to delete, or 0 to quit:\n");
                 int songIndex;
                 scanf("%d", &songIndex);
-                while (getchar() != '\n');
+                int ch;
+                while ((ch =getchar()) != '\n' && ch != EOF);
+
                 // Check if user wants to quit
                 if (songIndex == 0) {
                     return;
@@ -295,7 +307,8 @@ void mainMenu() {
         printf("\t4. exit\n");
 
         scanf("%d", &choice);
-        while (getchar() != '\n');
+        int ch;
+        while ((ch =getchar()) != '\n' && ch != EOF);
 
         if (choice == 1) {
             if (playlistCount == 0) {
