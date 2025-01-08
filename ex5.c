@@ -166,16 +166,15 @@ void managePlaylist(Playlist *playlist) {
         if (firstTime) {
             // Pointer to the playlist name
             int length = strlen(playlist->name);
-
             // Create a temporary buffer to clean the playlist name
             char tmp[length + 1];
             strcpy(tmp, playlist->name);
-
-            // Remove trailing spaces (but not the colon)
-            if (tmp[length - 1] == ' ') {
-                tmp[length - 1] = '\0';
+            // Remove trailing spaces
+            int j = length - 1;
+            while (j >= 0 && tmp[j] == ' ') {
+                tmp[j] = '\0';
+                j--;
             }
-
             // Print the cleaned-up playlist name
             printf("playlist %s:\n",tmp);
             firstTime = 0; // Reset flag after the first display
@@ -218,9 +217,11 @@ void managePlaylist(Playlist *playlist) {
                         // Create a temporary buffer to clean up the title
                         char tmp[length + 1];
                         strcpy(tmp, song->title);
-                        // Remove trailing spaces (but not the colon)
-                        if (tmp[length - 1] == ' ') {
-                            tmp[length - 1] = '\0';
+                        // Remove trailing spaces
+                        int i = length - 1;
+                        while (i >= 0 && tmp[i] == ' ') {
+                            tmp[i] = '\0';
+                            i--;
                         }
                         // Print the cleaned-up title with the song index
                         printf("Now playing %s:\n", tmp);
@@ -294,19 +295,18 @@ void managePlaylist(Playlist *playlist) {
                     // Pointer to the song in index i
                     Song *song = playlist->songs[i];
                     int length = strlen(song->title);
-
                     // Create a temporary buffer to clean the title
                     char tmp[length + 1];
                     strcpy(tmp, song->title);
-
-                    // Remove trailing spaces (but not the colon)
-                    if (tmp[length - 1] == ' ') {
-                        tmp[length - 1] = '\0';
+                    // Remove trailing spaces
+                    int i = length - 1;
+                    while (i >= 0 && tmp[i] == ' ') {
+                        tmp[i] = '\0';
+                        i--;
                     }
                     // Print the cleaned-up title
                     printf("Now playing %s:\n", tmp);
                     printf("$ %s $\n", song->lyrics);
-
                     // Increment the stream count
                     song->streams++;
                 }
